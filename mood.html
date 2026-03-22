@@ -4,40 +4,154 @@
   <title>Mood Flow</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    * { box-sizing: border-box; }
+
     body {
       font-family: -apple-system, sans-serif;
       background: #f7f7f7;
       margin: 0;
-      padding: 20px;
+      padding: 20px 16px 40px;
       text-align: center;
     }
 
     .card {
       background: white;
-      padding: 20px;
+      padding: 24px 20px;
       border-radius: 18px;
       max-width: 500px;
       margin: auto;
       box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     }
 
-    h2 {
-      margin-bottom: 20px;
+    .progress {
+      height: 5px;
+      background: #eee;
+      border-radius: 10px;
+      margin-bottom: 24px;
+    }
+    .bar {
+      height: 5px;
+      background: black;
+      border-radius: 10px;
+      transition: width 0.3s ease;
     }
 
-    input, textarea, select {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px;
+    .section-heading {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    /* ── Sliders ── */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .slider-row label {
+      flex: 0 0 110px;
+      text-align: left;
+      font-size: 15px;
+    }
+    .slider-row input[type=range] {
+      flex: 1;
+      margin: 0;
+      padding: 0;
+      accent-color: black;
+    }
+    .slider-val {
+      flex: 0 0 24px;
+      text-align: right;
+      font-size: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* ── Selects ── */
+    .select-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .select-row label {
+      flex: 0 0 140px;
+      text-align: left;
+      font-size: 15px;
+    }
+    .select-row select {
+      flex: 1;
+      margin: 0;
+      padding: 8px 10px;
       border-radius: 10px;
       border: 1px solid #ddd;
+      font-size: 15px;
+      background: white;
+    }
+
+    /* ── Yes/No toggles ── */
+    .yesno-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .yesno-row label {
+      text-align: left;
+      font-size: 15px;
+      flex: 1;
+    }
+    .toggle-group {
+      display: flex;
+      gap: 6px;
+    }
+    .toggle-btn {
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1.5px solid #ddd;
+      background: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .toggle-btn.active {
+      background: black;
+      color: white;
+      border-color: black;
+    }
+
+    /* ── Text input ── */
+    .text-label {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      text-align: left;
+      line-height: 1.3;
+    }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
       font-size: 16px;
+      font-family: inherit;
+      resize: none;
+      min-height: 100px;
+    }
+    .mic {
+      display: inline-block;
+      font-size: 22px;
+      cursor: pointer;
+      margin-top: 8px;
+      float: right;
     }
 
-    input[type=range] {
-      padding: 0;
-    }
-
+    /* ── Buttons ── */
     button {
       margin-top: 20px;
       padding: 14px;
@@ -47,31 +161,39 @@
       font-size: 16px;
       background: black;
       color: white;
-    }
-
-    .secondary {
-      background: #ddd;
-      color: black;
-    }
-
-    .progress {
-      height: 6px;
-      background: #ddd;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-
-    .bar {
-      height: 6px;
-      background: black;
-      border-radius: 10px;
-      width: 0%;
-    }
-
-    .mic {
-      font-size: 20px;
       cursor: pointer;
-      margin-left: 8px;
+    }
+    button.secondary {
+      background: #eee;
+      color: black;
+      margin-top: 10px;
+    }
+    #bottomButtons {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ── Entries ── */
+    #entries {
+      max-width: 500px;
+      margin: 10px auto 0;
+      text-align: left;
+    }
+    #entries p {
+      background: white;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin: 6px 0;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    /* ── Sync status ── */
+    #syncStatus {
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 6px;
+      min-height: 18px;
     }
   </style>
 </head>
@@ -79,65 +201,164 @@
 
 <div class="card">
   <div class="progress"><div class="bar" id="bar"></div></div>
-
-  <h2 id="question"></h2>
-  <div id="inputArea"></div>
-
+  <div id="stepContent"></div>
   <button onclick="next()">Next</button>
+  <div id="syncStatus"></div>
 </div>
 
 <br>
-<button class="secondary" onclick="downloadCSV()">Download CSV</button>
-<button class="secondary" onclick="toggleEntries()">View Entries</button>
+<div id="bottomButtons">
+  <button class="secondary" onclick="downloadCSV()">Download CSV</button>
+  <button class="secondary" onclick="toggleEntries()">View Entries</button>
+</div>
 <div id="entries"></div>
 
 <script>
+// ── Google Sheets sync ────────────────────────────────────────────────────────
+// Paste your Google Apps Script web app URL here after setup (see google_apps_script.js)
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbznbjTQBWarIo6zjSgtLfwih0aYpAVlBtJBAHEfm3h1nLx-nMeE25ZpCcaLRjw509KW/exec";
+// ─────────────────────────────────────────────────────────────────────────────
+
 const steps = [
-  { key: "energy", label: "How much energy?", type: "slider" },
-  { key: "moody", label: "How moody?", type: "slider" },
-  { key: "hopeful", label: "How hopeful?", type: "slider" },
-  { key: "diet", label: "Diet yesterday", type: "select", options: ["bad","okay","great"] },
-  { key: "exercise", label: "Exercise yesterday", type: "select", options: ["none","walking","real exercise"] },
-  { key: "ideas", label: "Big ideas / plans", type: "text" },
-  { key: "job", label: "Job outlook", type: "text" },
-  { key: "other", label: "Anything else", type: "text" }
+  {
+    id: "mood",
+    type: "sliders",
+    heading: "MOOD",
+    items: [
+      { key: "energy",      label: "Energy" },
+      { key: "hopefulness", label: "Hopefulness" },
+      { key: "motivation",  label: "Motivation" },
+      { key: "moodiness",   label: "Moodiness" },
+      { key: "anxiety",     label: "Anxiety" },
+      { key: "boredom",     label: "Boredom" },
+    ]
+  },
+  {
+    id: "yesterday",
+    type: "selects",
+    heading: "YESTERDAY",
+    items: [
+      { key: "exercise",     label: "Exercise",     options: ["none", "walking", "great"] },
+      { key: "diet",         label: "Diet",         options: ["bad", "okay", "great"] },
+      { key: "screentime",   label: "Screentime",   options: ["none", "a little", "a lot"] },
+      { key: "craft_time",   label: "Craft time",   options: ["none", "a little", "a lot"] },
+      { key: "social_time",  label: "Social time",  options: ["lonely", "nice solitude", "enough", "too much"] },
+      { key: "outdoor_time", label: "Outdoor time", options: ["tiny walks", "big walks", "adventure"] },
+    ]
+  },
+  {
+    id: "data",
+    type: "yesno",
+    heading: "DATA",
+    items: [
+      { key: "dance_yesterday",   label: "Dance yesterday?" },
+      { key: "dance_today",       label: "Dance later today?" },
+      { key: "therapy_yesterday", label: "Therapy yesterday?" },
+      { key: "commute_today",     label: "Commute today?" },
+      { key: "alex_meeting",    label: "Alex meeting today?" },
+    ]
+  },
+  { key: "feeling",    label: "How are you feeling?",          type: "text" },
+  { key: "excited",   label: "Are you excited? What about?",   type: "text" },
+  { key: "plans",     label: "Any plans? Any yearning?",       type: "text" },
+  { key: "work",      label: "How does work feel today?",      type: "text" },
+  { key: "anxieties", label: "Any anxieties?",                 type: "text" },
+  { key: "future",    label: "Message for the future? Lessons?", type: "text" },
 ];
 
 let current = 0;
 let answers = {};
+// tracks yes/no toggle state for the DATA section
+let yesnoState = {};
 
 function render() {
   const step = steps[current];
-  document.getElementById("question").innerText = step.label;
-
-  const progress = ((current) / steps.length) * 100;
+  const progress = (current / steps.length) * 100;
   document.getElementById("bar").style.width = progress + "%";
+  document.getElementById("syncStatus").innerText = "";
 
   let html = "";
 
-  if (step.type === "slider") {
-    html = `<input type="range" min="0" max="10" value="5" id="input">`;
+  if (step.type === "sliders") {
+    html += `<div class="section-heading">${step.heading}</div>`;
+    step.items.forEach(item => {
+      const saved = answers[item.key] ?? 5;
+      html += `
+        <div class="slider-row">
+          <label>${item.label}</label>
+          <input type="range" min="0" max="10" value="${saved}"
+            id="slider_${item.key}"
+            oninput="document.getElementById('val_${item.key}').innerText=this.value">
+          <span class="slider-val" id="val_${item.key}">${saved}</span>
+        </div>`;
+    });
+
+  } else if (step.type === "selects") {
+    html += `<div class="section-heading">${step.heading}</div>`;
+    step.items.forEach(item => {
+      const saved = answers[item.key] || item.options[0];
+      html += `<div class="select-row">
+        <label>${item.label}</label>
+        <select id="select_${item.key}">
+          ${item.options.map(o => `<option${o === saved ? " selected" : ""}>${o}</option>`).join("")}
+        </select>
+      </div>`;
+    });
+
+  } else if (step.type === "yesno") {
+    html += `<div class="section-heading">${step.heading}</div>`;
+    step.items.forEach(item => {
+      if (!(item.key in yesnoState)) yesnoState[item.key] = null;
+      const val = yesnoState[item.key];
+      html += `<div class="yesno-row">
+        <label>${item.label}</label>
+        <div class="toggle-group">
+          <button class="toggle-btn${val === "yes" ? " active" : ""}"
+            onclick="setYesNo('${item.key}','yes',this)">Yes</button>
+          <button class="toggle-btn${val === "no" ? " active" : ""}"
+            onclick="setYesNo('${item.key}','no',this)">No</button>
+        </div>
+      </div>`;
+    });
+
+  } else if (step.type === "text") {
+    html += `<div class="text-label">${step.label}</div>
+      <textarea id="textInput" placeholder="...">${answers[step.key] || ""}</textarea>
+      <span class="mic" onclick="voice()">🎤</span>`;
   }
 
-  if (step.type === "select") {
-    html = `<select id="input">` +
-      step.options.map(o => `<option>${o}</option>`).join("") +
-      `</select>`;
-  }
+  document.getElementById("stepContent").innerHTML = html;
+}
 
-  if (step.type === "text") {
-    html = `
-      <textarea id="input"></textarea>
-      <div class="mic" onclick="voice()">🎤</div>
-    `;
-  }
-
-  document.getElementById("inputArea").innerHTML = html;
+function setYesNo(key, val, btn) {
+  yesnoState[key] = val;
+  // update button styles within this row only
+  const group = btn.closest(".toggle-group");
+  group.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
 }
 
 function next() {
-  const val = document.getElementById("input").value;
-  answers[steps[current].key] = val;
+  const step = steps[current];
+
+  if (step.type === "sliders") {
+    step.items.forEach(item => {
+      answers[item.key] = document.getElementById("slider_" + item.key).value;
+    });
+
+  } else if (step.type === "selects") {
+    step.items.forEach(item => {
+      answers[item.key] = document.getElementById("select_" + item.key).value;
+    });
+
+  } else if (step.type === "yesno") {
+    step.items.forEach(item => {
+      answers[item.key] = yesnoState[item.key] ?? "";
+    });
+
+  } else if (step.type === "text") {
+    answers[step.key] = document.getElementById("textInput").value;
+  }
 
   current++;
 
@@ -145,7 +366,7 @@ function next() {
     save();
     current = 0;
     answers = {};
-    alert("Saved ✓");
+    yesnoState = {};
   }
 
   render();
@@ -154,19 +375,39 @@ function next() {
 function save() {
   answers.timestamp = new Date().toLocaleString();
 
+  // Save locally
   let entries = JSON.parse(localStorage.getItem("entries")) || [];
   entries.push(answers);
   localStorage.setItem("entries", JSON.stringify(entries));
+
+  // Sync to Google Sheets if URL is configured
+  if (SHEETS_URL !== "YOUR_SCRIPT_URL_HERE") {
+    document.getElementById("syncStatus").innerText = "Syncing...";
+    fetch(SHEETS_URL, {
+      method: "POST",
+      body: JSON.stringify(answers),
+    })
+      .then(r => r.text())
+      .then(() => {
+        document.getElementById("syncStatus").innerText = "Saved to Sheets ✓";
+      })
+      .catch(() => {
+        document.getElementById("syncStatus").innerText = "Saved locally (Sheets sync failed)";
+      });
+  } else {
+    alert("Saved locally ✓");
+  }
 }
 
 function downloadCSV() {
   const entries = JSON.parse(localStorage.getItem("entries")) || [];
   if (!entries.length) return alert("No data");
 
-  let csv = Object.keys(entries[0]).join(",") + "\n";
-
+  // Collect all possible keys
+  const allKeys = [...new Set(entries.flatMap(e => Object.keys(e)))];
+  let csv = allKeys.join(",") + "\n";
   entries.forEach(e => {
-    csv += Object.values(e).map(v => `"${v}"`).join(",") + "\n";
+    csv += allKeys.map(k => `"${(e[k] ?? "").toString().replace(/"/g, '""')}"`).join(",") + "\n";
   });
 
   const blob = new Blob([csv], { type: "text/csv" });
@@ -178,29 +419,31 @@ function downloadCSV() {
 
 function toggleEntries() {
   const div = document.getElementById("entries");
+  if (div.innerHTML) { div.innerHTML = ""; return; }
+
   const entries = JSON.parse(localStorage.getItem("entries")) || [];
+  if (!entries.length) { div.innerHTML = "<p>No entries yet.</p>"; return; }
 
   div.innerHTML = entries.slice().reverse().map(e =>
-    `<p>${e.timestamp} – energy:${e.energy}, mood:${e.moody}</p>`
+    `<p>${e.timestamp}<br>
+     energy ${e.energy} · hope ${e.hopefulness} · motivation ${e.motivation}<br>
+     mood ${e.moodiness} · anxiety ${e.anxiety} · boredom ${e.boredom}</p>`
   ).join("");
 }
 
 function voice() {
-  if (!('webkitSpeechRecognition' in window)) {
-    alert("Voice not supported");
+  if (!("webkitSpeechRecognition" in window)) {
+    alert("Voice not supported in this browser");
     return;
   }
-
   const rec = new webkitSpeechRecognition();
   rec.start();
-
   rec.onresult = e => {
-    document.getElementById("input").value += e.results[0][0].transcript;
+    document.getElementById("textInput").value += e.results[0][0].transcript;
   };
 }
 
 render();
 </script>
-
 </body>
 </html>
