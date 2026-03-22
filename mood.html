@@ -72,7 +72,7 @@
     .slider-card-label {
       font-size: 19px;
       font-weight: 700;
-      color: #f5a623;
+      color: #b8711a;
     }
     .slider-card-number {
       font-size: 13px;
@@ -94,10 +94,10 @@
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 30px;
-      height: 30px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      background: #111;
+      background: #c8895a;
       cursor: pointer;
       border: none;
     }
@@ -285,7 +285,7 @@
 
 <script>
 // ── Google Sheets sync ────────────────────────────────────────────────────────
-const SHEETS_URL = "https://script.google.com/macros/s/AKfycbznbjTQBWarIo6zjSgtLfwih0aYpAVlBtJBAHEfm3h1nLx-nMeE25ZpCcaLRjw509KW/exec";
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbxi8HEOhASr3dRGClY75VuhLC9rAch5qNjmvRyu3wIYKYXintG6LB3Mip--SEABwuBa/exec";
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ── Quotes — add as many as you like ─────────────────────────────────────────
@@ -326,7 +326,8 @@ const steps = [
       { key: "screentime",   label: "Screentime",   options: ["none", "a little", "a lot"] },
       { key: "craft_time",   label: "Craft time",   options: ["none", "a little", "a lot"] },
       { key: "social_time",  label: "Social time",  options: ["lonely", "nice solitude", "enough", "too much"] },
-      { key: "outdoor_time", label: "Outdoor time", options: ["tiny walks", "big walks", "adventure"] },
+      { key: "outdoor_time",     label: "Outdoor time",     options: ["tiny walks", "big walks", "adventure"] },
+      { key: "research_output", label: "Research output", options: ["none", "bare minimum", "a lot"] },
     ]
   },
   {
@@ -527,10 +528,8 @@ function save() {
 
   if (SHEETS_URL !== "YOUR_SCRIPT_URL_HERE") {
     document.getElementById("syncStatus").innerText = "Syncing...";
-    fetch(SHEETS_URL, {
-      method: "POST",
+    fetch(SHEETS_URL + "?data=" + encodeURIComponent(JSON.stringify(answers)), {
       mode: "no-cors",
-      body: JSON.stringify(answers),
     })
       .then(() => {
         document.getElementById("syncStatus").innerText = "Saved ✓";
