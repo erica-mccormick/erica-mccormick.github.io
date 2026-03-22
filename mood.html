@@ -1,254 +1,205 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mood Tracker</title>
+  <title>Mood Flow</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: -apple-system, sans-serif;
       background: #f7f7f7;
-      padding: 16px;
-      max-width: 600px;
-      margin: auto;
-      color: #222;
-    }
-
-    h2 {
-      margin-bottom: 10px;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
     }
 
     .card {
       background: white;
-      padding: 16px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      margin-bottom: 16px;
+      padding: 20px;
+      border-radius: 18px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     }
 
-    label {
-      font-weight: 600;
-      display: block;
-      margin-top: 12px;
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 16px;
     }
 
     input[type=range] {
-      width: 100%;
-    }
-
-    textarea {
-      width: 100%;
-      height: 70px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      padding: 8px;
-      font-size: 14px;
-    }
-
-    select {
-      width: 100%;
-      padding: 8px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
+      padding: 0;
     }
 
     button {
-      margin-top: 12px;
-      padding: 12px;
+      margin-top: 20px;
+      padding: 14px;
       width: 100%;
-      font-size: 16px;
-      border-radius: 12px;
       border: none;
-      background: #222;
+      border-radius: 12px;
+      font-size: 16px;
+      background: black;
       color: white;
     }
 
-    button.secondary {
+    .secondary {
       background: #ddd;
-      color: #222;
+      color: black;
+    }
+
+    .progress {
+      height: 6px;
+      background: #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .bar {
+      height: 6px;
+      background: black;
+      border-radius: 10px;
+      width: 0%;
     }
 
     .mic {
-      font-size: 18px;
-      margin-left: 6px;
+      font-size: 20px;
       cursor: pointer;
-    }
-
-    .entry {
-      font-size: 13px;
-      padding: 8px 0;
-      border-bottom: 1px solid #eee;
-    }
-
-    .small {
-      font-size: 12px;
-      color: #666;
+      margin-left: 8px;
     }
   </style>
 </head>
 <body>
 
-<h2>🌱 Daily Check-In</h2>
-
 <div class="card">
+  <div class="progress"><div class="bar" id="bar"></div></div>
 
-<label>Energy: <span id="energyVal">5</span></label>
-<input type="range" min="0" max="10" value="5" id="energy">
+  <h2 id="question"></h2>
+  <div id="inputArea"></div>
 
-<label>Moody: <span id="moodyVal">5</span></label>
-<input type="range" min="0" max="10" value="5" id="moody">
+  <button onclick="next()">Next</button>
+</div>
 
-<label>Hopeful: <span id="hopefulVal">5</span></label>
-<input type="range" min="0" max="10" value="5" id="hopeful">
-
-<label>Diet yesterday</label>
-<select id="diet">
-  <option>bad</option>
-  <option>okay</option>
-  <option>great</option>
-</select>
-
-<label>Exercise yesterday</label>
-<select id="exercise">
-  <option>none</option>
-  <option>walking</option>
-  <option>real exercise</option>
-</select>
-
-<label>
-  Big ideas / plans 
-  <span class="mic" onclick="startVoice('ideas')">🎤</span>
-</label>
-<textarea id="ideas"></textarea>
-
-<label>
-  Job outlook 
-  <span class="mic" onclick="startVoice('job')">🎤</span>
-</label>
-<textarea id="job"></textarea>
-
-<label>
-  Anything else 
-  <span class="mic" onclick="startVoice('other')">🎤</span>
-</label>
-<textarea id="other"></textarea>
-
-<button onclick="saveEntry()">Save Entry</button>
+<br>
 <button class="secondary" onclick="downloadCSV()">Download CSV</button>
-
-<p id="status" class="small"></p>
-
-</div>
-
-<div class="card">
-<button class="secondary" onclick="toggleEntries()">View Past Entries</button>
-<div id="entries" style="display:none;"></div>
-</div>
+<button class="secondary" onclick="toggleEntries()">View Entries</button>
+<div id="entries"></div>
 
 <script>
-// --- sliders ---
-["energy", "moody", "hopeful"].forEach(id => {
-  const s = document.getElementById(id);
-  const l = document.getElementById(id + "Val");
-  s.oninput = () => l.textContent = s.value;
-});
+const steps = [
+  { key: "energy", label: "How much energy?", type: "slider" },
+  { key: "moody", label: "How moody?", type: "slider" },
+  { key: "hopeful", label: "How hopeful?", type: "slider" },
+  { key: "diet", label: "Diet yesterday", type: "select", options: ["bad","okay","great"] },
+  { key: "exercise", label: "Exercise yesterday", type: "select", options: ["none","walking","real exercise"] },
+  { key: "ideas", label: "Big ideas / plans", type: "text" },
+  { key: "job", label: "Job outlook", type: "text" },
+  { key: "other", label: "Anything else", type: "text" }
+];
 
-// --- save ---
-function saveEntry() {
-  const entry = {
-    timestamp: new Date().toLocaleString(),
-    energy: energy.value,
-    moody: moody.value,
-    hopeful: hopeful.value,
-    diet: diet.value,
-    exercise: exercise.value,
-    ideas: ideas.value,
-    job: job.value,
-    other: other.value
-  };
+let current = 0;
+let answers = {};
+
+function render() {
+  const step = steps[current];
+  document.getElementById("question").innerText = step.label;
+
+  const progress = ((current) / steps.length) * 100;
+  document.getElementById("bar").style.width = progress + "%";
+
+  let html = "";
+
+  if (step.type === "slider") {
+    html = `<input type="range" min="0" max="10" value="5" id="input">`;
+  }
+
+  if (step.type === "select") {
+    html = `<select id="input">` +
+      step.options.map(o => `<option>${o}</option>`).join("") +
+      `</select>`;
+  }
+
+  if (step.type === "text") {
+    html = `
+      <textarea id="input"></textarea>
+      <div class="mic" onclick="voice()">🎤</div>
+    `;
+  }
+
+  document.getElementById("inputArea").innerHTML = html;
+}
+
+function next() {
+  const val = document.getElementById("input").value;
+  answers[steps[current].key] = val;
+
+  current++;
+
+  if (current >= steps.length) {
+    save();
+    current = 0;
+    answers = {};
+    alert("Saved ✓");
+  }
+
+  render();
+}
+
+function save() {
+  answers.timestamp = new Date().toLocaleString();
 
   let entries = JSON.parse(localStorage.getItem("entries")) || [];
-  entries.push(entry);
+  entries.push(answers);
   localStorage.setItem("entries", JSON.stringify(entries));
-
-  document.getElementById("status").textContent = "Saved ✓";
-
-  clearInputs();
 }
 
-// --- clear inputs ---
-function clearInputs() {
-  energy.value = 5;
-  moody.value = 5;
-  hopeful.value = 5;
-
-  ["energy","moody","hopeful"].forEach(id => {
-    document.getElementById(id + "Val").textContent = 5;
-  });
-
-  diet.value = "bad";
-  exercise.value = "none";
-
-  ideas.value = "";
-  job.value = "";
-  other.value = "";
-}
-
-// --- CSV ---
 function downloadCSV() {
   const entries = JSON.parse(localStorage.getItem("entries")) || [];
-  if (!entries.length) return alert("No data yet!");
+  if (!entries.length) return alert("No data");
 
   let csv = Object.keys(entries[0]).join(",") + "\n";
 
   entries.forEach(e => {
-    csv += Object.values(e)
-      .map(v => `"${String(v).replace(/"/g, '""')}"`)
-      .join(",") + "\n";
+    csv += Object.values(e).map(v => `"${v}"`).join(",") + "\n";
   });
 
   const blob = new Blob([csv], { type: "text/csv" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "mood_data.csv";
+  a.download = "mood.csv";
   a.click();
 }
 
-// --- view entries ---
 function toggleEntries() {
   const div = document.getElementById("entries");
+  const entries = JSON.parse(localStorage.getItem("entries")) || [];
 
-  if (div.style.display === "none") {
-    const entries = JSON.parse(localStorage.getItem("entries")) || [];
-    div.innerHTML = entries.slice().reverse().map(e => `
-      <div class="entry">
-        <div class="small">${e.timestamp}</div>
-        energy:${e.energy} | moody:${e.moody} | hopeful:${e.hopeful}<br>
-        ${e.ideas || ""}
-      </div>
-    `).join("");
-
-    div.style.display = "block";
-  } else {
-    div.style.display = "none";
-  }
+  div.innerHTML = entries.slice().reverse().map(e =>
+    `<p>${e.timestamp} – energy:${e.energy}, mood:${e.moody}</p>`
+  ).join("");
 }
 
-// --- voice input ---
-function startVoice(fieldId) {
+function voice() {
   if (!('webkitSpeechRecognition' in window)) {
-    alert("Voice not supported on this browser");
+    alert("Voice not supported");
     return;
   }
 
-  const recognition = new webkitSpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.start();
+  const rec = new webkitSpeechRecognition();
+  rec.start();
 
-  recognition.onresult = function(event) {
-    const text = event.results[0][0].transcript;
-    document.getElementById(fieldId).value += text;
+  rec.onresult = e => {
+    document.getElementById("input").value += e.results[0][0].transcript;
   };
 }
+
+render();
 </script>
 
 </body>
