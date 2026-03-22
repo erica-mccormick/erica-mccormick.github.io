@@ -33,7 +33,6 @@
       height: 5px;
       background: black;
       border-radius: 10px;
-      transition: width 0.3s ease;
     }
 
     .section-heading {
@@ -46,30 +45,57 @@
       text-align: left;
     }
 
-    /* ── Sliders ── */
-    .slider-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .slider-row label {
-      flex: 0 0 110px;
+    /* ── Slider cards ── */
+    .slider-card {
+      background: #f5f5f5;
+      border-radius: 14px;
+      padding: 14px 18px 16px;
+      margin-bottom: 10px;
       text-align: left;
-      font-size: 15px;
     }
-    .slider-row input[type=range] {
-      flex: 1;
-      margin: 0;
+    .slider-card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 2px;
+    }
+    .slider-card-number {
+      font-size: 52px;
+      font-weight: 700;
+      color: #111;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      outline: none;
+      border: none;
       padding: 0;
-      accent-color: black;
+      margin: 0;
+      cursor: pointer;
     }
-    .slider-val {
-      flex: 0 0 24px;
-      text-align: right;
-      font-size: 15px;
-      font-weight: 600;
-      color: #333;
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #111;
+      cursor: pointer;
+      border: none;
+    }
+    .slider-ticks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #ccc;
+      margin-top: 6px;
     }
 
     /* ── Selects ── */
@@ -117,7 +143,6 @@
       background: white;
       font-size: 14px;
       cursor: pointer;
-      transition: all 0.15s;
     }
     .toggle-btn.active {
       background: black;
@@ -149,6 +174,22 @@
       cursor: pointer;
       margin-top: 8px;
       float: right;
+    }
+
+    /* ── Completion screen ── */
+    .done-date {
+      font-size: 13px;
+      color: #bbb;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .done-quote {
+      font-size: 24px;
+      font-weight: 600;
+      color: #111;
+      line-height: 1.35;
+      padding: 10px 0 20px;
     }
 
     /* ── Buttons ── */
@@ -202,7 +243,7 @@
 <div class="card">
   <div class="progress"><div class="bar" id="bar"></div></div>
   <div id="stepContent"></div>
-  <button onclick="next()">Next</button>
+  <button id="nextBtn" onclick="next()">Next</button>
   <div id="syncStatus"></div>
 </div>
 
@@ -215,8 +256,20 @@
 
 <script>
 // ── Google Sheets sync ────────────────────────────────────────────────────────
-// Paste your Google Apps Script web app URL here after setup (see google_apps_script.js)
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbznbjTQBWarIo6zjSgtLfwih0aYpAVlBtJBAHEfm3h1nLx-nMeE25ZpCcaLRjw509KW/exec";
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Quotes — add as many as you like ─────────────────────────────────────────
+const QUOTES = [
+  "Have a great day!",
+  "You can do it.",
+  "One step at a time.",
+  "Be kind to yourself today.",
+  "You're doing better than you think.",
+  "Today is full of possibility.",
+  "Rest is productive too.",
+  "Small things add up.",
+];
 // ─────────────────────────────────────────────────────────────────────────────
 
 const steps = [
@@ -254,42 +307,54 @@ const steps = [
       { key: "dance_yesterday",   label: "Dance yesterday?" },
       { key: "dance_today",       label: "Dance later today?" },
       { key: "therapy_yesterday", label: "Therapy yesterday?" },
+      { key: "sleep_hygiene",     label: "Sleep hygiene?" },
+      { key: "reading",           label: "Reading?" },
+      { key: "period",            label: "Period?" },
+      { key: "travel",            label: "Travel?" },
+      { key: "running",           label: "Running?" },
       { key: "commute_today",     label: "Commute today?" },
-      { key: "alex_meeting",    label: "Alex meeting today?" },
+      { key: "alex_meeting",      label: "Alex meeting today?" },
     ]
   },
-  { key: "feeling",    label: "How are you feeling?",          type: "text" },
-  { key: "excited",   label: "Are you excited? What about?",   type: "text" },
-  { key: "plans",     label: "Any plans? Any yearning?",       type: "text" },
-  { key: "work",      label: "How does work feel today?",      type: "text" },
-  { key: "anxieties", label: "Any anxieties?",                 type: "text" },
-  { key: "future",    label: "Message for the future? Lessons?", type: "text" },
+  { key: "feeling",    label: "How are you feeling?",            type: "text" },
+  { key: "excited",    label: "Are you excited? What about?",    type: "text" },
+  { key: "plans",      label: "Any plans? Any yearning?",        type: "text" },
+  { key: "work",       label: "How does work feel today?",       type: "text" },
+  { key: "anxieties",  label: "Any anxieties?",                  type: "text" },
+  { key: "future",     label: "Message for the future? Lessons?", type: "text" },
 ];
 
 let current = 0;
 let answers = {};
-// tracks yes/no toggle state for the DATA section
 let yesnoState = {};
+
+function updateSlider(input, valId) {
+  const pct = (input.value / input.max) * 100;
+  input.style.background = `linear-gradient(to right, #111 ${pct}%, #ddd ${pct}%)`;
+  document.getElementById(valId).innerText = input.value;
+}
 
 function render() {
   const step = steps[current];
   const progress = (current / steps.length) * 100;
   document.getElementById("bar").style.width = progress + "%";
   document.getElementById("syncStatus").innerText = "";
+  document.getElementById("nextBtn").innerText = "Next";
 
   let html = "";
 
   if (step.type === "sliders") {
     html += `<div class="section-heading">${step.heading}</div>`;
     step.items.forEach(item => {
-      const saved = answers[item.key] ?? 5;
+      const val = answers[item.key] ?? 0;
       html += `
-        <div class="slider-row">
-          <label>${item.label}</label>
-          <input type="range" min="0" max="10" value="${saved}"
+        <div class="slider-card">
+          <div class="slider-card-label">${item.label}</div>
+          <div class="slider-card-number" id="val_${item.key}">${val}</div>
+          <input type="range" min="0" max="10" value="${val}"
             id="slider_${item.key}"
-            oninput="document.getElementById('val_${item.key}').innerText=this.value">
-          <span class="slider-val" id="val_${item.key}">${saved}</span>
+            oninput="updateSlider(this,'val_${item.key}')">
+          <div class="slider-ticks"><span>0</span><span>10</span></div>
         </div>`;
     });
 
@@ -322,17 +387,29 @@ function render() {
     });
 
   } else if (step.type === "text") {
+    const isLast = current === steps.length - 1;
+    if (isLast) document.getElementById("nextBtn").innerText = "Save";
     html += `<div class="text-label">${step.label}</div>
       <textarea id="textInput" placeholder="...">${answers[step.key] || ""}</textarea>
       <span class="mic" onclick="voice()">🎤</span>`;
   }
 
   document.getElementById("stepContent").innerHTML = html;
+
+  // Set initial fill on sliders after rendering
+  if (step.type === "sliders") {
+    step.items.forEach(item => {
+      const input = document.getElementById("slider_" + item.key);
+      if (input) {
+        const pct = (input.value / input.max) * 100;
+        input.style.background = `linear-gradient(to right, #111 ${pct}%, #ddd ${pct}%)`;
+      }
+    });
+  }
 }
 
 function setYesNo(key, val, btn) {
   yesnoState[key] = val;
-  // update button styles within this row only
   const group = btn.closest(".toggle-group");
   group.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
@@ -345,17 +422,14 @@ function next() {
     step.items.forEach(item => {
       answers[item.key] = document.getElementById("slider_" + item.key).value;
     });
-
   } else if (step.type === "selects") {
     step.items.forEach(item => {
       answers[item.key] = document.getElementById("select_" + item.key).value;
     });
-
   } else if (step.type === "yesno") {
     step.items.forEach(item => {
       answers[item.key] = yesnoState[item.key] ?? "";
     });
-
   } else if (step.type === "text") {
     answers[step.key] = document.getElementById("textInput").value;
   }
@@ -364,23 +438,40 @@ function next() {
 
   if (current >= steps.length) {
     save();
-    current = 0;
-    answers = {};
-    yesnoState = {};
+    showCompletion();
+  } else {
+    render();
   }
+}
 
+function showCompletion() {
+  const quote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  const dateStr = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+
+  document.getElementById("bar").style.width = "100%";
+  document.getElementById("stepContent").innerHTML = `
+    <div class="done-date">${dateStr}</div>
+    <div class="done-quote">${quote}</div>
+  `;
+  document.getElementById("nextBtn").innerText = "Start new entry";
+  document.getElementById("nextBtn").onclick = resetForm;
+}
+
+function resetForm() {
+  current = 0;
+  answers = {};
+  yesnoState = {};
+  document.getElementById("nextBtn").onclick = next;
   render();
 }
 
 function save() {
   answers.timestamp = new Date().toLocaleString();
 
-  // Save locally
   let entries = JSON.parse(localStorage.getItem("entries")) || [];
   entries.push(answers);
   localStorage.setItem("entries", JSON.stringify(entries));
 
-  // Sync to Google Sheets if URL is configured
   if (SHEETS_URL !== "YOUR_SCRIPT_URL_HERE") {
     document.getElementById("syncStatus").innerText = "Syncing...";
     fetch(SHEETS_URL, {
@@ -389,13 +480,11 @@ function save() {
     })
       .then(r => r.text())
       .then(() => {
-        document.getElementById("syncStatus").innerText = "Saved to Sheets ✓";
+        document.getElementById("syncStatus").innerText = "Saved ✓";
       })
       .catch(() => {
-        document.getElementById("syncStatus").innerText = "Saved locally (Sheets sync failed)";
+        document.getElementById("syncStatus").innerText = "Saved locally (sync failed)";
       });
-  } else {
-    alert("Saved locally ✓");
   }
 }
 
@@ -403,7 +492,6 @@ function downloadCSV() {
   const entries = JSON.parse(localStorage.getItem("entries")) || [];
   if (!entries.length) return alert("No data");
 
-  // Collect all possible keys
   const allKeys = [...new Set(entries.flatMap(e => Object.keys(e)))];
   let csv = allKeys.join(",") + "\n";
   entries.forEach(e => {
