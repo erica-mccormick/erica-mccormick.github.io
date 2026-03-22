@@ -7,7 +7,7 @@
     * { box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, sans-serif;
+      font-family: ui-rounded, -apple-system, sans-serif;
       background: #f7f7f7;
       margin: 0;
       padding: 20px 16px 40px;
@@ -54,15 +54,13 @@
       text-align: left;
     }
     .slider-card-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #aaa;
-      margin-bottom: 2px;
+      font-size: 17px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 4px;
     }
     .slider-card-number {
-      font-size: 52px;
+      font-size: 32px;
       font-weight: 700;
       color: #111;
       line-height: 1;
@@ -177,19 +175,32 @@
     }
 
     /* ── Completion screen ── */
+    .done-card {
+      background: #fffbf0;
+      border-radius: 16px;
+      padding: 28px 20px 24px;
+      margin-bottom: 4px;
+    }
+    .done-saved {
+      font-size: 42px;
+      font-weight: 800;
+      color: #f5a623;
+      margin-bottom: 6px;
+    }
     .done-date {
-      font-size: 13px;
-      color: #bbb;
+      font-size: 14px;
+      color: #c9a96e;
       margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
     }
     .done-quote {
-      font-size: 24px;
-      font-weight: 600;
-      color: #111;
-      line-height: 1.35;
-      padding: 10px 0 20px;
+      font-size: 19px;
+      font-weight: 500;
+      color: #555;
+      line-height: 1.5;
+    }
+    #nextBtn.done {
+      background: #f5a623;
+      color: white;
     }
 
     /* ── Buttons ── */
@@ -262,11 +273,11 @@ const SHEETS_URL = "https://script.google.com/macros/s/AKfycbznbjTQBWarIo6zjSgtL
 // ── Quotes — add as many as you like ─────────────────────────────────────────
 const QUOTES = [
   "Have a great day!",
-  "You can do it.",
-  "Be kind to yourself today.",
+  "You can do it!",
+  "Be kind to yourself today!",
   "You're doing better than you think.",
   "Today is full of possibility.",
-  "Rest is productive too.",
+  "What would Alicia say?",  
   "“You cannot get through a single day without having an impact on the world around you. What you do makes a difference, and you have to decide what kind of difference you want to make.” \n― Jane Goodall",
   "“I change myself, I change the world.”\n― Gloria Anzaldua",
   "“I will not have my life narrowed down. I will not bow down to somebody else's whim or to someone else's ignorance.”\n― bell hooks"
@@ -362,10 +373,11 @@ function render() {
   } else if (step.type === "selects") {
     html += `<div class="section-heading">${step.heading}</div>`;
     step.items.forEach(item => {
-      const saved = answers[item.key] || item.options[0];
+      const saved = answers[item.key] || "";
       html += `<div class="select-row">
         <label>${item.label}</label>
         <select id="select_${item.key}">
+          <option value="" disabled${!saved ? " selected" : ""}>—</option>
           ${item.options.map(o => `<option${o === saved ? " selected" : ""}>${o}</option>`).join("")}
         </select>
       </div>`;
@@ -450,19 +462,27 @@ function showCompletion() {
   const dateStr = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 
   document.getElementById("bar").style.width = "100%";
+  document.getElementById("syncStatus").innerText = "";
   document.getElementById("stepContent").innerHTML = `
-    <div class="done-date">${dateStr}</div>
-    <div class="done-quote">${quote}</div>
+    <div class="done-card">
+      <div class="done-saved">Saved! ✦</div>
+      <div class="done-date">${dateStr}</div>
+      <div class="done-quote">${quote}</div>
+    </div>
   `;
-  document.getElementById("nextBtn").innerText = "Start new entry";
-  document.getElementById("nextBtn").onclick = resetForm;
+  const btn = document.getElementById("nextBtn");
+  btn.innerText = "Start new entry";
+  btn.classList.add("done");
+  btn.onclick = resetForm;
 }
 
 function resetForm() {
   current = 0;
   answers = {};
   yesnoState = {};
-  document.getElementById("nextBtn").onclick = next;
+  const btn = document.getElementById("nextBtn");
+  btn.onclick = next;
+  btn.classList.remove("done");
   render();
 }
 
@@ -477,9 +497,9 @@ function save() {
     document.getElementById("syncStatus").innerText = "Syncing...";
     fetch(SHEETS_URL, {
       method: "POST",
+      mode: "no-cors",
       body: JSON.stringify(answers),
     })
-      .then(r => r.text())
       .then(() => {
         document.getElementById("syncStatus").innerText = "Saved ✓";
       })
