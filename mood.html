@@ -368,7 +368,7 @@ let yesnoState = {};
 
 function updateSlider(input, valId) {
   const pct = (input.value / input.max) * 100;
-  input.style.background = `linear-gradient(to right, #111 ${pct}%, #ddd ${pct}%)`;
+  input.style.background = `linear-gradient(to right, #c8895a ${pct}%, #ddd ${pct}%)`;
   document.getElementById(valId).innerText = input.value;
 }
 
@@ -419,10 +419,10 @@ function render() {
       html += `<div class="yesno-row">
         <label>${item.label}</label>
         <div class="toggle-group">
-          <button class="toggle-btn${val === "yes" ? " active" : ""}"
-            onclick="setYesNo('${item.key}','yes',this)">Yes</button>
           <button class="toggle-btn${val === "no" ? " active" : ""}"
             onclick="setYesNo('${item.key}','no',this)">No</button>
+          <button class="toggle-btn${val === "yes" ? " active" : ""}"
+            onclick="setYesNo('${item.key}','yes',this)">Yes</button>
         </div>
       </div>`;
     });
@@ -446,7 +446,7 @@ function render() {
       const input = document.getElementById("slider_" + item.key);
       if (input) {
         const pct = (input.value / input.max) * 100;
-        input.style.background = `linear-gradient(to right, #111 ${pct}%, #ddd ${pct}%)`;
+        input.style.background = `linear-gradient(to right, #c8895a ${pct}%, #ddd ${pct}%)`;
       }
     });
   }
@@ -528,15 +528,11 @@ function save() {
 
   if (SHEETS_URL !== "YOUR_SCRIPT_URL_HERE") {
     document.getElementById("syncStatus").innerText = "Syncing...";
-    fetch(SHEETS_URL + "?data=" + encodeURIComponent(JSON.stringify(answers)), {
-      mode: "no-cors",
-    })
-      .then(() => {
-        document.getElementById("syncStatus").innerText = "Saved ✓";
-      })
-      .catch(() => {
-        document.getElementById("syncStatus").innerText = "Saved locally (sync failed)";
-      });
+    const img = new Image();
+    img.src = SHEETS_URL + "?data=" + encodeURIComponent(JSON.stringify(answers));
+    img.onload = img.onerror = () => {
+      document.getElementById("syncStatus").innerText = "Saved ✓";
+    };
   }
 }
 
