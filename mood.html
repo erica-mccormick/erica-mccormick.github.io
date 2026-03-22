@@ -15,7 +15,7 @@
     }
 
     .card {
-      background: white;
+      background: #fffbf0;
       padding: 24px 20px;
       border-radius: 18px;
       max-width: 500px;
@@ -57,34 +57,34 @@
 
     /* ── Slider cards ── */
     .slider-card {
-      background: #f5f5f5;
+      background: #f5ece0;
+      border: 1px solid #ede0cc;
       border-radius: 14px;
       padding: 12px 18px 14px;
       margin-bottom: 10px;
       text-align: left;
     }
-    .slider-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 8px;
-    }
     .slider-card-label {
+      display: block;
       font-size: 19px;
       font-weight: 700;
-      color: #b8711a;
+      color: #444;
+      margin-bottom: 10px;
     }
     .slider-card-number {
-      font-size: 13px;
-      font-weight: 600;
-      color: #bbb;
+      font-size: 34px;
+      font-weight: 800;
+      color: #f5a623;
+      text-align: center;
+      margin-top: 8px;
+      line-height: 1;
     }
     input[type=range] {
       -webkit-appearance: none;
       appearance: none;
       width: 100%;
-      height: 6px;
-      border-radius: 3px;
+      height: 10px;
+      border-radius: 5px;
       outline: none;
       border: none;
       padding: 0;
@@ -94,19 +94,12 @@
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 22px;
-      height: 22px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       background: #c8895a;
       cursor: pointer;
       border: none;
-    }
-    .slider-ticks {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: #ccc;
-      margin-top: 6px;
     }
 
     /* ── Selects ── */
@@ -387,14 +380,11 @@ function render() {
       const val = answers[item.key] ?? 0;
       html += `
         <div class="slider-card">
-          <div class="slider-card-header">
-            <span class="slider-card-label">${item.label}</span>
-            <span class="slider-card-number" id="val_${item.key}">${val}</span>
-          </div>
+          <span class="slider-card-label">${item.label}</span>
           <input type="range" min="0" max="10" value="${val}"
             id="slider_${item.key}"
             oninput="updateSlider(this,'val_${item.key}')">
-          <div class="slider-ticks"><span>0</span><span>10</span></div>
+          <div class="slider-card-number" id="val_${item.key}">${val}</div>
         </div>`;
     });
 
