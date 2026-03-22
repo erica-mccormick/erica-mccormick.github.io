@@ -45,26 +45,39 @@
       text-align: left;
     }
 
+    /* ── Slider section heading ── */
+    .slider-heading {
+      font-size: 38px;
+      font-weight: 800;
+      color: #f5a623;
+      text-align: left;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+
     /* ── Slider cards ── */
     .slider-card {
       background: #f5f5f5;
       border-radius: 14px;
-      padding: 14px 18px 16px;
+      padding: 12px 18px 14px;
       margin-bottom: 10px;
       text-align: left;
     }
+    .slider-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
     .slider-card-label {
-      font-size: 17px;
-      font-weight: 600;
-      color: #555;
-      margin-bottom: 4px;
+      font-size: 19px;
+      font-weight: 700;
+      color: #f5a623;
     }
     .slider-card-number {
-      font-size: 32px;
-      font-weight: 700;
-      color: #111;
-      line-height: 1;
-      margin-bottom: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #bbb;
     }
     input[type=range] {
       -webkit-appearance: none;
@@ -149,10 +162,15 @@
     }
 
     /* ── Text input ── */
+    .text-question {
+      margin-bottom: 18px;
+      text-align: left;
+    }
     .text-label {
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 600;
-      margin-bottom: 14px;
+      color: #f5a623;
+      margin-bottom: 6px;
       text-align: left;
       line-height: 1.3;
     }
@@ -161,7 +179,7 @@
       padding: 12px;
       border-radius: 12px;
       border: 1px solid #ddd;
-      font-size: 16px;
+      font-size: 15px;
       font-family: inherit;
       resize: none;
       min-height: 100px;
@@ -328,12 +346,19 @@ const steps = [
       { key: "alex_meeting",      label: "Alex meeting today?" },
     ]
   },
-  { key: "feeling",    label: "How are you feeling?",            type: "text" },
-  { key: "excited",    label: "Are you excited? What about?",    type: "text" },
-  { key: "plans",      label: "Any plans? Any yearning?",        type: "text" },
-  { key: "work",       label: "How does work feel today?",       type: "text" },
-  { key: "anxieties",  label: "Any anxieties?",                  type: "text" },
-  { key: "future",     label: "Message for the future? Lessons?", type: "text" },
+  {
+    id: "reflections",
+    type: "texts",
+    items: [
+      { key: "feeling",   label: "How are you feeling?" },
+      { key: "excited",   label: "Are you excited? What about?" },
+      { key: "plans",     label: "Any plans? Any yearning?" },
+      { key: "work",      label: "How does work feel today?" },
+      { key: "anxieties", label: "Any anxieties?" },
+      { key: "future",    label: "Message for the future? Lessons?" },
+      { key: "dreams",    label: "Any dreams last night?" },
+    ]
+  },
 ];
 
 let current = 0;
@@ -356,13 +381,15 @@ function render() {
   let html = "";
 
   if (step.type === "sliders") {
-    html += `<div class="section-heading">${step.heading}</div>`;
+    html += `<div class="slider-heading">${step.heading}</div>`;
     step.items.forEach(item => {
       const val = answers[item.key] ?? 0;
       html += `
         <div class="slider-card">
-          <div class="slider-card-label">${item.label}</div>
-          <div class="slider-card-number" id="val_${item.key}">${val}</div>
+          <div class="slider-card-header">
+            <span class="slider-card-label">${item.label}</span>
+            <span class="slider-card-number" id="val_${item.key}">${val}</span>
+          </div>
           <input type="range" min="0" max="10" value="${val}"
             id="slider_${item.key}"
             oninput="updateSlider(this,'val_${item.key}')">
@@ -399,12 +426,15 @@ function render() {
       </div>`;
     });
 
-  } else if (step.type === "text") {
-    const isLast = current === steps.length - 1;
-    if (isLast) document.getElementById("nextBtn").innerText = "Save";
-    html += `<div class="text-label">${step.label}</div>
-      <textarea id="textInput" placeholder="...">${answers[step.key] || ""}</textarea>
-      <span class="mic" onclick="voice()">🎤</span>`;
+  } else if (step.type === "texts") {
+    document.getElementById("nextBtn").innerText = "Save";
+    step.items.forEach(item => {
+      html += `<div class="text-question">
+        <div class="text-label">${item.label}</div>
+        <textarea id="text_${item.key}" placeholder="..." rows="3">${answers[item.key] || ""}</textarea>
+      </div>`;
+    });
+    html += `<span class="mic" onclick="voice()">🎤</span>`;
   }
 
   document.getElementById("stepContent").innerHTML = html;
@@ -443,8 +473,10 @@ function next() {
     step.items.forEach(item => {
       answers[item.key] = yesnoState[item.key] ?? "";
     });
-  } else if (step.type === "text") {
-    answers[step.key] = document.getElementById("textInput").value;
+  } else if (step.type === "texts") {
+    step.items.forEach(item => {
+      answers[item.key] = document.getElementById("text_" + item.key).value;
+    });
   }
 
   current++;
@@ -548,7 +580,10 @@ function voice() {
   const rec = new webkitSpeechRecognition();
   rec.start();
   rec.onresult = e => {
-    document.getElementById("textInput").value += e.results[0][0].transcript;
+    const focused = document.activeElement;
+    if (focused && focused.tagName === "TEXTAREA") {
+      focused.value += e.results[0][0].transcript;
+    }
   };
 }
 
