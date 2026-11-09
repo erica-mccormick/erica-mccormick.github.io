@@ -58,6 +58,7 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 
 /* ---------- Home: photo strip ---------- */
 .strip-wrap { max-width: var(--wrap); margin: 1.5rem auto 0; padding: 0 1.25rem; }
+.strip-wrap figcaption { font-size: .8rem; color: var(--muted); margin-top: .4rem; }
 /* object-position sets which part of the photo stays in view: 0% = top/left, 100% = bottom/right */
 .strip { width: 100%; aspect-ratio: 5 / 2; object-fit: cover; object-position: 50% 35%; border-radius: 8px; }
 
