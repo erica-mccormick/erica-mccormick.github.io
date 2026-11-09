@@ -54,7 +54,7 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 /* ---------- Home: photo strip ---------- */
 .strip-wrap { max-width: var(--wrap); margin: 1.5rem auto 0; padding: 0 1.25rem; }
 /* object-position sets which part of the photo stays in view: 0% = top/left, 100% = bottom/right */
-.strip { width: 100%; aspect-ratio: 5 / 2; object-fit: cover; object-position: 50% 30%; border-radius: 8px; }
+.strip { width: 100%; aspect-ratio: 5 / 2; object-fit: cover; object-position: 50% 60%; border-radius: 8px; }
 
 /* ---------- Home: intro + details column ---------- */
 .intro { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3rem; align-items: start; padding-block: 2rem .5rem; }
