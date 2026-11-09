@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Research | Erica L. McCormick</title>
+	<meta name="description" content="Research by Erica L. McCormick on bedrock water use by plants, vegetation response to extreme storms, and evapotranspiration.">
+	<meta name="author" content="Erica L. McCormick">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Header: identical on every page. To mark the current page, put aria-current="page" on its link. -->
+<header class="site-header">
+	<div class="wrap">
+		<a class="brand" href="index.html">Erica L. McCormick</a>
+		<nav class="site-nav" aria-label="Main">
+			<ul>
+				<li><a href="index.html#about">About</a></li>
+				<li><a href="research.html" aria-current="page">Research</a></li>
+				<li><a class="key" href="publications.html">Publications</a></li>
+				<li><a class="key" href="pdfs/McCormick_CV.pdf">CV</a></li>
+				<li><a href="press.html">Press</a></li>
+			</ul>
+		</nav>
+	</div>
+</header>
+
+<main class="wrap">
+
+	<div class="page-title"><h1>Research</h1></div>
+
+	<section>
+		<!--
+			PROJECT BLOCKS: same blocks as the "Highlighted research" section of index.html.
+			- To add one: copy a whole <article class="project"> ... </article> block and edit it.
+			- Newest or most important first.
+			- A block cut from index.html can be pasted here unchanged (and vice versa).
+		-->
+		<div class="rows">
+
+			<article class="project">
+				<img src="images/research/bedrock-water.jpg" width="1200" height="900" alt="A gnarled tree growing out of bare rock above a mountain lake" loading="lazy" data-photo="bedrock-water">
+				<div>
+					<h3><a href="https://doi.org/10.1038/s41586-021-03761-3">Widespread bedrock water use</a></h3>
+					<p class="summary">Woody plants across the U.S. routinely draw on water stored in weathered bedrock, a source typically left out of hydrologic and ecosystem models.</p>
+					<div class="more">
+						<p>Contrary to the long-standing assumption that plants access water only in soils, we found that woody plants across the continental U.S. commonly use rock moisture: water stored in the cracks and fissures of weathered bedrock. Because direct measurements of bedrock water are rare, we used plants as sensors, inferring bedrock water use from remotely sensed water balances.</p>
+						<p>McCormick et al. 2021, <i>Nature</i>. See the <a href="https://ericamccormick.com/widespread-bedrock-water-use/">project page</a> for maps, data, and code.</p>
+					</div>
+				</div>
+			</article>
+
+			<article class="project">
+				<img src="images/research/extreme-storms.jpg" width="1200" height="800" alt="Waves breaking around dark coastal rocks" loading="lazy" data-photo="extreme-storms">
+				<div>
+					<h3><a href="https://doi.org/10.1111/gcb.70257">Extreme storms and photosynthesis</a></h3>
+					<p class="summary">How vegetation responds to an extreme storm depends more on the site than on how intense the storm is.</p>
+					<div class="more">
+						<p>Vegetation response to drought is studied far more than response to extreme storms, even though their global impacts may be comparable. Using machine learning with data from 54 FLUXNET sites, I quantified changes in photosynthesis after extreme storms and found that the response is explained better by soil texture, climate, topography, and vegetation density than by storm intensity.</p>
+						<p>McCormick et al. 2025, <i>Global Change Biology</i>. <a href="https://doi.org/10.5281/zenodo.15360983">Code and data</a>.</p>
+					</div>
+				</div>
+			</article>
+
+			<article class="project">
+				<img src="images/research/et-atmosphere.jpg" width="1200" height="800" alt="Oak trees on a golden grassy hill under a blue sky" loading="lazy" data-photo="et-atmosphere">
+				<div>
+					<h3><a href="https://doi.org/10.5194/hess-30-2417-2026">Evapotranspiration from the atmosphere</a></h3>
+					<p class="summary">A new CONUS-wide ET dataset estimated from air temperature and humidity alone, with no assumptions about soil moisture or plant behavior.</p>
+					<div class="more">
+						<p>Nearly all evapotranspiration (ET) datasets build in assumptions about soil moisture and plant behavior, which makes them hard to use for learning about the subsurface. I implemented a remotely sensed ET dataset based on the surface flux equilibrium approach, which uses only atmospheric temperature and humidity, and showed with triple collocation that it performs comparably to commonly used ET products.</p>
+						<p>McCormick et al. 2026, <i>Hydrology and Earth System Sciences</i>. <a href="https://doi.org/10.5281/zenodo.17903675">Daily ET dataset</a>.</p>
+					</div>
+				</div>
+			</article>
+
+		</div>
+	</section>
+
+</main>
+
+<footer class="site-footer">
+	<div class="wrap">
+		<ul>
+			<li><a href="https://scholar.google.com/citations?user=XnvaTh4AAAAJ&amp;hl=en">Google Scholar</a></li>
+			<li><a href="https://github.com/erica-mccormick">GitHub</a></li>
+			<li><a href="https://orcid.org/0000-0002-7160-398X">ORCID</a></li>
+			<li><a href="https://www.linkedin.com/in/erica-mccormick-42007912a">LinkedIn</a></li>
+			<li>ericamcc [at] stanford [dot] edu</li>
+		</ul>
+		© Erica McCormick 2026
+	</div>
+</footer>
+
+</body>
+</html>

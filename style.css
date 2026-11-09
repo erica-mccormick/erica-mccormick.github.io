@@ -1,0 +1,144 @@
+/* =================================================================
+   Erica L. McCormick: shared stylesheet for every page.
+   Plain CSS, no framework. Colors and fonts are set once in :root.
+   ================================================================= */
+
+:root {
+	--bg: #ffffff;
+	--bg-soft: #f4f6f7;
+	--text: #1e2a32;        /* dark slate */
+	--muted: #5d6b74;
+	--rule: #dde3e6;
+	--accent: #1f4e79;      /* water blue: links, buttons */
+	--accent-dark: #163a5b;
+	--hover: #b5652a;       /* ochre: link hover */
+	--sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+	--wrap: 1040px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 var(--sans); }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--hover); text-decoration: underline; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+h1, h2, h3 { font-weight: 600; line-height: 1.2; letter-spacing: -.01em; margin: 0 0 .5em; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.55rem; }
+h3 { font-size: 1.12rem; }
+p { margin: 0 0 1em; }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 1.25rem; }
+section { padding-block: 2.5rem; scroll-margin-top: 1rem; }
+main { padding-bottom: 1rem; }
+
+/* Section heading with a thin rule underneath */
+h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.4rem; }
+.page-title { padding-block: 2.5rem 0; }
+.page-title h1 { margin: 0; }
+
+/* ---------- Header: name left, menu right ---------- */
+.site-header { border-bottom: 1px solid var(--rule); }
+.site-header .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 2rem; padding-block: 1.1rem; }
+.brand { font-size: 1.6rem; font-weight: 700; color: var(--text); letter-spacing: -.02em; line-height: 1.2; }
+.brand:hover { color: var(--text); text-decoration: none; }
+.site-nav ul { display: flex; flex-wrap: wrap; gap: .1rem 1.4rem; list-style: none; margin: 0; padding: 0; }
+.site-nav a { display: inline-block; color: var(--muted); font-weight: 500; font-size: .98rem; padding: .5rem 0; } /* ~44px tap target */
+.site-nav a:hover { color: var(--text); text-decoration: none; }
+.site-nav a[aria-current="page"] { color: var(--text); box-shadow: inset 0 -2px 0 var(--text); }
+.site-nav a.key { color: var(--accent); font-weight: 700; }   /* Publications and CV stand out */
+
+/* ---------- Home: photo strip ---------- */
+.strip-wrap { max-width: var(--wrap); margin: 1.5rem auto 0; padding: 0 1.25rem; }
+/* object-position sets which part of the photo stays in view: 0% = top/left, 100% = bottom/right */
+.strip { width: 100%; aspect-ratio: 5 / 2; object-fit: cover; object-position: 50% 42%; border-radius: 8px; }
+
+/* ---------- Home: intro + details column ---------- */
+.intro { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3rem; align-items: start; padding-block: 2rem .5rem; }
+.lede { font-size: 1.15rem; color: var(--muted); max-width: 60ch; margin: 0; }
+.details { border-left: 1px solid var(--rule); padding-left: 1.5rem; font-size: .95rem; }
+.details dl { margin: 0; }
+.details dt { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: .9rem; }
+.details dt:first-child { margin-top: 0; }
+.details dd { margin: .1rem 0 0; }
+.inline-links { display: flex; flex-wrap: wrap; gap: .2rem 1rem; }
+
+/* ---------- Buttons (rounded) ---------- */
+.actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.3rem; }
+.btn { display: inline-block; padding: .6rem 1.25rem; border-radius: 999px; font-weight: 600; font-size: .95rem;
+       background: var(--accent); color: #fff; border: 1.5px solid var(--accent); }
+.btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); color: #fff; text-decoration: none; }
+.btn.outline { background: transparent; color: var(--accent); }
+.btn.outline:hover { background: var(--bg-soft); color: var(--accent-dark); }
+
+/* ---------- Home: About ---------- */
+.about { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 2.5rem; align-items: start; }
+.about img { width: 220px; height: 220px; object-fit: cover; border-radius: 50%; }
+.about p { max-width: 64ch; }
+
+/* ---------- Projects ----------
+   One <article class="project"> block is used on both pages.
+   Inside <div class="cards"> (home) it shows as a grid card;
+   inside <div class="rows"> (research.html) it shows as a full-width row.
+   So a block can be cut from one page and pasted into the other unchanged. */
+.project img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 4px; }
+.project h3 a { color: var(--text); }
+.project h3 a:hover { color: var(--accent); }
+.project p { color: var(--muted); margin: 0; }
+
+.cards { display: grid; gap: 1.75rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.cards .project h3 { margin: .9rem 0 .35rem; }
+.cards .project p { font-size: .93rem; }
+.cards .project .more { display: none; }   /* longer text only shows on the Research page */
+
+.rows .project { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 2rem; align-items: center;
+                 padding-block: 1.75rem; border-bottom: 1px solid var(--rule); }
+.rows .project:first-child { padding-top: 0; }
+.rows .project p { max-width: 65ch; }
+.rows .project p + p { margin-top: .7rem; }
+.rows .project .summary { display: none; } /* short summary only shows on the home page */
+
+/* ---------- Publications ---------- */
+.pubs { list-style: none; margin: 0; padding: 0; }
+.pubs li { padding: .9rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
+.pubs li:first-child { padding-top: 0; }
+.pubs .me { font-weight: 600; color: var(--text); }
+.pubs .links { display: inline-flex; flex-wrap: wrap; gap: .2rem .8rem; margin-left: .3rem; font-weight: 600; font-size: .92rem; }
+.pubs .note { color: var(--muted); font-size: .92rem; }
+h3.year { font-size: 1rem; color: var(--muted); margin: 1.8rem 0 .4rem; letter-spacing: .02em; }
+h3.year:first-of-type { margin-top: 0; }
+
+/* ---------- Simple dated lists: Datasets & Code, Press ---------- */
+.list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.list li { display: grid; grid-template-columns: 4rem minmax(0, 1fr); gap: 1.25rem; padding: .9rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
+.list .when { color: var(--muted); font-weight: 600; font-size: .92rem; font-variant-numeric: tabular-nums; padding-top: .05rem; }
+.list .sub { display: block; color: var(--muted); font-size: .92rem; }
+.list .item-links { display: flex; flex-wrap: wrap; gap: .1rem 1rem; font-size: .92rem; font-weight: 600; margin-top: .15rem; }
+
+/* ---------- Footer ---------- */
+.site-footer .wrap { border-top: 1px solid var(--rule); padding-block: 1.6rem 2.5rem; color: var(--muted); font-size: .9rem; }
+.site-footer ul { display: flex; flex-wrap: wrap; gap: .3rem 1.3rem; list-style: none; padding: 0; margin: 0 0 .6rem; }
+
+/* ---------- Phones and small tablets ---------- */
+@media (max-width: 760px) {
+	body { font-size: 16.5px; }
+	h1 { font-size: 1.7rem; }
+	.brand { font-size: 1.4rem; }
+	.site-header .wrap { display: block; }
+	.site-nav { margin-top: .2rem; }
+	.strip-wrap { margin-top: 1rem; }
+	.strip { aspect-ratio: 16 / 9; max-height: 230px; }
+	.intro { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 1.5rem; }
+	.details { border-left: 0; border-top: 1px solid var(--rule); padding: 1.1rem 0 0; }
+	.about { grid-template-columns: 1fr; gap: 1.25rem; }
+	.about img { width: 160px; height: 160px; }
+	.rows .project { grid-template-columns: 1fr; gap: 1rem; }
+	.list li { grid-template-columns: 1fr; gap: .1rem; }
+}
+
+/* A list directly under a section heading doesn't need its own top line */
+h2.sec + .list { border-top: 0; }
