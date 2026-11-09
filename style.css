@@ -11,7 +11,7 @@
 	--rule: #dde3e6;
 	--accent: #1f4e79;      /* water blue: links, buttons */
 	--accent-dark: #163a5b;
-	--hover: #b5652a;       /* ochre: link hover */
+	--hover: #9a4f1d;       /* ochre: link hover (dark enough for 4.5:1 contrast) */
 	--sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 	--wrap: 1040px;
 }
@@ -35,6 +35,11 @@ p { margin: 0 0 1em; }
 .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 1.25rem; }
 section { padding-block: 2.5rem; scroll-margin-top: 1rem; }
 main { padding-bottom: 1rem; }
+
+/* Accessibility helpers */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: -9999px; top: 0; }
+.skip:focus { left: 1rem; top: 1rem; z-index: 100; background: var(--bg); padding: .6rem 1rem; border: 2px solid var(--accent); border-radius: 6px; }
 
 /* Section heading with a thin rule underneath */
 h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.4rem; }
