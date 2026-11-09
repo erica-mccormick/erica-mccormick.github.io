@@ -156,7 +156,7 @@ h3.year:first-of-type { margin-top: 0; }
 	.site-nav { margin-top: .2rem; }
 	.home-header .brand { font-size: 2rem; }
 	.about { grid-template-columns: 1fr; gap: 1.25rem; }
-	.about img { width: 240px; height: 240px; }
+	.about img { width: 240px; height: 240px; justify-self: center; }   /* centred on phones only */
 	.rows .project { grid-template-columns: 1fr; gap: 1rem; }
 	section { padding-block: 1.75rem; }
 	.cards .project p { font-size: 1rem; }
