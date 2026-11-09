@@ -106,7 +106,7 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 .rows .project:first-child { padding-top: 0; }
 .rows .project p { max-width: 65ch; }
 .rows .project p + p { margin-top: .7rem; }
-.rows .project .summary, .rows .project .paper-btn { display: none; } /* short summary and paper button only show on the home page */
+.rows .project .summary { display: none; } /* short summary only shows on the home page */
 
 /* ---------- Publications ---------- */
 .pubs { list-style: none; margin: 0; padding: 0; }
