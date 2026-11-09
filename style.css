@@ -51,6 +51,7 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 .site-header .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 2rem; padding-block: 1.1rem; }
 .brand { font-size: 1.6rem; font-weight: 700; color: var(--text); letter-spacing: -.02em; line-height: 1.2; }
 .brand:hover { color: var(--text); text-decoration: none; }
+.pronouns { font-size: .5em; font-weight: 500; color: var(--muted); letter-spacing: 0; white-space: nowrap; }
 /* Home page only: bigger name (the name is the page's h1 there) */
 .home-name { margin: 0; font-size: inherit; letter-spacing: normal; }
 .home-header .wrap { padding-block: 1.75rem 1.25rem; }
