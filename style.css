@@ -152,7 +152,8 @@ h3.year:first-of-type { margin-top: 0; }
 	body { font-size: 16.5px; }
 	h1 { font-size: 1.7rem; }
 	.brand { font-size: 1.4rem; }
-	.site-header .wrap { display: block; }
+	.site-header .wrap { display: block; text-align: center; }   /* name and menu centred on phones only */
+	.site-nav ul { justify-content: center; }
 	.site-nav { margin-top: .2rem; }
 	.home-header .brand { font-size: 2rem; }
 	.about { grid-template-columns: 1fr; gap: 1.25rem; }
