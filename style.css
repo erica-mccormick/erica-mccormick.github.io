@@ -90,6 +90,8 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
    inside <div class="rows"> (research.html) it shows as a full-width row.
    So a block can be cut from one page and pasted into the other unchanged. */
 .project img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 4px; }
+.project figure { margin: 0; }
+.project figcaption { font-size: .8rem; color: var(--muted); margin-top: .35rem; line-height: 1.4; }
 .project h3 a { color: var(--text); }
 .project h3 a:hover { color: var(--accent); }
 .project p { color: var(--muted); margin: 0; }
