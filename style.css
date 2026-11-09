@@ -98,7 +98,9 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 .cards .project .more { display: none; }   /* longer text only shows on the Research page */
 .cards .project { display: flex; flex-direction: column; }            /* lets the paper buttons line up */
 .cards .project > div { display: flex; flex-direction: column; flex: 1; }
-.cards .project .paper-btn { margin-top: auto; }
+.cards .project .paper-btn { display: none; }   /* home page uses a small arrow on the title instead */
+.cards .project h3 a::after { content: "\2197" / ""; display: inline-block; margin-left: .3em; font-size: .8em; color: var(--accent); }   /* ↗, hidden from screen readers */
+.cards .project h3 a:hover::after { color: var(--hover); }
 .cards .project p.summary { margin-bottom: 1rem; }
 
 .rows .project { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 2rem; align-items: center;
