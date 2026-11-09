@@ -81,6 +81,7 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 .about { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 2.75rem; align-items: start; }   /* photo top lines up with the first line of text */
 .about img { width: 320px; height: 320px; object-fit: cover; border-radius: 14px; }
 .about .contact { font-size: .95rem; color: var(--muted); }
+.about .contact a, .about .contact .nowrap { white-space: nowrap; }
 .about .bio p:first-child { margin-top: -.3rem; }   /* lifts the first line level with the top of the photo */
 .about p { max-width: 64ch; }
 
@@ -130,6 +131,7 @@ ol.pubs.numbered li::marker { color: var(--muted); font-weight: 600; font-varian
 .page-note { color: var(--muted); margin: .6rem 0 0; }
 .pubs .me { font-weight: 600; color: var(--text); }
 .pubs .links { display: inline-flex; flex-wrap: wrap; gap: .2rem .8rem; margin-left: .3rem; font-weight: 600; font-size: .92rem; }
+.pubs .links a { display: inline-block; padding: .2rem 0; }
 .pubs .note { color: var(--muted); font-size: .92rem; }
 h3.year { font-size: 1rem; color: var(--muted); margin: 1.8rem 0 .4rem; letter-spacing: .02em; }
 h3.year:first-of-type { margin-top: 0; }
@@ -156,6 +158,11 @@ h3.year:first-of-type { margin-top: 0; }
 	.about { grid-template-columns: 1fr; gap: 1.25rem; }
 	.about img { width: 240px; height: 240px; }
 	.rows .project { grid-template-columns: 1fr; gap: 1rem; }
+	section { padding-block: 1.75rem; }
+	.cards .project p { font-size: 1rem; }
+	ol.pubs.numbered { padding-left: 1.6rem; }
+	ol.pubs.numbered li { padding-left: .2rem; }
+	.pubs .links a { padding: .45rem 0; }   /* ~44px tall tap targets on phones */
 	.list li { grid-template-columns: 1fr; gap: .1rem; }
 }
 
