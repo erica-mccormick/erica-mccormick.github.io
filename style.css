@@ -71,7 +71,7 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 /* ---------- Home: About ---------- */
 .about { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 2.75rem; align-items: center; }   /* photo centred beside the text */
 .about img { width: 320px; height: 320px; object-fit: cover; border-radius: 50%; }
-.about .contact { font-size: .95rem; color: var(--muted); }
+.about .contact { font-size: .95rem; color: var(--muted); margin-bottom: .9rem; }
 .about p { max-width: 64ch; }
 
 /* ---------- Projects ----------
