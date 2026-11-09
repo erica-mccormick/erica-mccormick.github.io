@@ -69,9 +69,12 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 .btn.outline:hover { background: var(--bg-soft); color: var(--accent-dark); }
 
 /* ---------- Home: About ---------- */
-.about { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 2.75rem; align-items: center; }   /* photo centred beside the text */
+.about { display: grid; grid-template-columns: 320px minmax(0, 1fr); column-gap: 2.75rem; row-gap: 1rem; align-items: center; }   /* photo centred beside the text */
 .about img { width: 320px; height: 320px; object-fit: cover; border-radius: 14px; }
-.about .contact { font-size: .95rem; color: var(--muted); }
+/* The photo is centred on the bio paragraphs; the contact line sits in its own row below the text */
+.about img { grid-row: 1; }
+.about .bio { grid-column: 2; grid-row: 1; }
+.about .contact { grid-column: 2; grid-row: 2; margin: 0; font-size: .95rem; color: var(--muted); }
 .about p { max-width: 64ch; }
 
 /* ---------- Projects ----------
@@ -85,6 +88,7 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 .project h3 a { color: var(--text); }
 .project h3 a:hover { color: var(--accent); }
 .project p { color: var(--muted); margin: 0; }
+.project .venue { font-size: .88rem; color: var(--muted); margin: -.15rem 0 .45rem; }
 
 .cards { display: grid; gap: 1.75rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .cards .project img { aspect-ratio: 4 / 3; }   /* a little taller than on the Research page */
@@ -97,7 +101,7 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 .rows .project:first-child { padding-top: 0; }
 .rows .project p { max-width: 65ch; }
 .rows .project p + p { margin-top: .7rem; }
-.rows .project .summary { display: none; } /* short summary only shows on the home page */
+.rows .project .summary, .rows .project .venue { display: none; } /* short summary and journal line only show on the home page */
 
 /* ---------- Publications ---------- */
 .pubs { list-style: none; margin: 0; padding: 0; }
@@ -130,6 +134,7 @@ h3.year:first-of-type { margin-top: 0; }
 	.home-header .brand { font-size: 2rem; }
 	.about { grid-template-columns: 1fr; gap: 1.25rem; }
 	.about img { width: 240px; height: 240px; }
+	.about .bio, .about .contact { grid-column: 1; grid-row: auto; }
 	.rows .project { grid-template-columns: 1fr; gap: 1rem; }
 	.list li { grid-template-columns: 1fr; gap: .1rem; }
 }
