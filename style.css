@@ -86,25 +86,37 @@ h2.sec { padding-bottom: .4rem; border-bottom: 1px solid var(--rule); margin-bot
 .project h3 a { color: var(--text); }
 .project h3 a:hover { color: var(--accent); }
 .project p { color: var(--muted); margin: 0; }
-.project .venue { font-size: .88rem; color: var(--muted); margin: -.15rem 0 .45rem; }
+/* "McCormick et al. (2021) Nature →" button that opens the paper */
+.paper-btn { display: inline-block; align-self: flex-start; margin-top: 1rem; padding: .4rem .95rem; border: 1.5px solid var(--accent);
+             border-radius: 999px; font-size: .85rem; font-weight: 600; color: var(--accent); line-height: 1.35; white-space: nowrap; }
+.paper-btn:hover { background: var(--bg-soft); color: var(--accent-dark); text-decoration: none; }
 
 .cards { display: grid; gap: 1.75rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 .cards .project img { aspect-ratio: 4 / 3; }   /* a little taller than on the Research page */
 .cards .project h3 { margin: .9rem 0 .35rem; }
 .cards .project p { font-size: .93rem; }
 .cards .project .more { display: none; }   /* longer text only shows on the Research page */
+.cards .project { display: flex; flex-direction: column; }            /* lets the paper buttons line up */
+.cards .project > div { display: flex; flex-direction: column; flex: 1; }
+.cards .project .paper-btn { margin-top: auto; }
+.cards .project p.summary { margin-bottom: 1rem; }
 
 .rows .project { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 2rem; align-items: center;
                  padding-block: 1.75rem; border-bottom: 1px solid var(--rule); }
 .rows .project:first-child { padding-top: 0; }
 .rows .project p { max-width: 65ch; }
 .rows .project p + p { margin-top: .7rem; }
-.rows .project .summary, .rows .project .venue { display: none; } /* short summary and journal line only show on the home page */
+.rows .project .summary, .rows .project .paper-btn { display: none; } /* short summary and paper button only show on the home page */
 
 /* ---------- Publications ---------- */
 .pubs { list-style: none; margin: 0; padding: 0; }
 .pubs li { padding: .9rem 0; border-bottom: 1px solid var(--rule); margin: 0; }
 .pubs li:first-child { padding-top: 0; }
+/* Numbered journal articles: browser counts down from the newest */
+ol.pubs.numbered { list-style: decimal; padding-left: 2.2rem; }
+ol.pubs.numbered li { padding-left: .4rem; }
+ol.pubs.numbered li::marker { color: var(--muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+.page-note { color: var(--muted); margin: .6rem 0 0; }
 .pubs .me { font-weight: 600; color: var(--text); }
 .pubs .links { display: inline-flex; flex-wrap: wrap; gap: .2rem .8rem; margin-left: .3rem; font-weight: 600; font-size: .92rem; }
 .pubs .note { color: var(--muted); font-size: .92rem; }
