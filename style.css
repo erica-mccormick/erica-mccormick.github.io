@@ -158,7 +158,8 @@ h3.year:first-of-type { margin-top: 0; }
 	.home-header .brand { font-size: 2rem; }
 	.about { grid-template-columns: 1fr; gap: 1.25rem; }
 	.about img { width: 240px; height: 240px; justify-self: center; }   /* centred on phones only */
-	.rows .project { grid-template-columns: 1fr; gap: 1rem; }
+	.rows .project { grid-template-columns: minmax(0, 1fr); gap: 1rem; }   /* minmax keeps long content from widening the photo */
+	.paper-btn { white-space: normal; max-width: 100%; border-radius: 1.1rem; }   /* long button text wraps on phones */
 	section { padding-block: 1.75rem; }
 	.cards .project p { font-size: 1rem; }
 	ol.pubs.numbered { padding-left: 1.6rem; }
